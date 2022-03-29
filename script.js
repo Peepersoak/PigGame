@@ -74,7 +74,7 @@ class Player {
         this.position.x < obs.position.x + obs.width &&
         this.position.y >= obs.position.y
       ) {
-        console.log("Should Die");
+        console.log("Die");
       }
     });
 
