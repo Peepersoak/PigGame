@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.text {
+  color: white;
+  text-align: center;
+}
+
+.startingWrapper {
+  position: absolute;
+  top: 200px;
+}
+
+.start-btn {
+  background: red;
+  padding: 10px 100px;
+  border: none;
+}
+
+.start-btn:hover {
+  background: rgb(117, 0, 0);
+}
+
+.hidden {
+  display: none;
+}
+
+.center {
+  text-align: center;
+}
