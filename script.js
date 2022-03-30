@@ -293,7 +293,6 @@ function spawnObs() {
 function increaseSpeed() {
   if (!isPlaying) return;
   distanceTravel++;
-  if (speed >= 10) return;
   if (distanceTravel >= 500) {
     speed += 0.3;
     distanceTravel = 0;
@@ -325,7 +324,7 @@ setInterval(animatePlayer, 50);
 setInterval(animateSaw, 150);
 setInterval(function () {
   if (!isPlaying) return;
-  totalDistance++;
+  totalDistance += Math.round(speed / 6);
   currentScore.textContent = `${totalDistance} meters`;
 }, 1000);
 
