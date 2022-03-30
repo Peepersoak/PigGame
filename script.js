@@ -222,6 +222,24 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+window.addEventListener("mousedown", () => {
+  if (!isPlaying) {
+    themeSong.play();
+    startMenu.classList.add("hidden");
+    restart.classList.add("hidden");
+    isPlaying = true;
+    speed = 6;
+    player.isDead = false;
+    totalDistance = 0;
+    return;
+  }
+  if (!player.isJumping) {
+    player.isJumping = true;
+    player.velocity.y -= 15;
+    jumpAudio.play();
+  }
+});
+
 function requestimage(imageSource) {
   const image = new Image();
   image.src = imageSource;
