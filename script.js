@@ -1,3 +1,5 @@
+"use strict";
+
 const canvas = document.querySelector("canvas");
 let c = canvas.getContext("2d");
 
@@ -15,17 +17,31 @@ const groundArr = [];
 const backgroundArr = [];
 const playerImage = [];
 const sawImages = [];
+const firecampImages = [];
+const obstaclesImages = [];
 let currentImage = 0;
 let isAdding = true;
 
 let isPlaying = false;
 
 const startMenu = document.querySelector("#startMenu");
-const startBtn = document.querySelector("#startBtn");
+const restart = document.querySelector("#restartMenu");
+const playerScore = document.querySelector("#score");
+const currentScore = document.querySelector("#currentScore");
+const totalScore = document.querySelector("#highScore");
+
+//Audios
+const jumpAudio = new Audio("./audio/jump.mp3");
+const fireDeathAudio = new Audio("./audio/death-fire.mp3");
+const grindDeathAudio = new Audio("./audio/death-grind.mp3");
+const themeSong = new Audio("./audio/theme.mp3");
+themeSong.loop = true;
 
 let distance = 0;
 
 let distanceTravel = 0;
+let totalDistance = 0;
+let highScore = 0;
 
 function addImages() {
   for (let i = 1; i <= 7; i++) {
@@ -33,6 +49,11 @@ function addImages() {
   }
   sawImages.push(requestimage("./img/saw/1.png"));
   sawImages.push(requestimage("./img/saw/2.png"));
+  firecampImages.push(requestimage("./img/firecamp/1.png"));
+  firecampImages.push(requestimage("./img/firecamp/2.png"));
+
+  obstaclesImages.push(sawImages);
+  obstaclesImages.push(firecampImages);
 }
 addImages();
 
@@ -50,6 +71,7 @@ class Player {
     };
     this.isJumping = false;
     this.image = playerImage[0];
+    this.isDead = false;
   }
 
   draw() {
@@ -59,6 +81,8 @@ class Player {
   }
 
   update() {
+    if (this.isDead) return;
+
     this.position.y += this.velocity.y;
 
     if (this.position.y + this.height + this.velocity.y < groundY) {
@@ -72,12 +96,31 @@ class Player {
       if (
         this.position.x + this.width > obs.position.x &&
         this.position.x < obs.position.x + obs.width &&
-        this.position.y >= obs.position.y
+        this.position.y + this.height >= obs.position.y
       ) {
-        console.log("Die");
+        switch (obs.name) {
+          case "Fire":
+            fireDeathAudio.play();
+            break;
+          case "Saw":
+            grindDeathAudio.play();
+            break;
+        }
+        themeSong.pause();
+        themeSong.currentTime = 0;
+        this.isDead = true;
+        isPlaying = false;
+        restart.classList.toggle("hidden");
+        obstacleArr.length = 0;
+        playerScore.textContent = `Distance travelled: ${totalDistance} meters`;
+        speed = 2;
+        if (totalDistance > highScore) {
+          highScore = totalDistance;
+          totalScore.textContent = `High Score: ${highScore} meters`;
+        }
+        return;
       }
     });
-
     this.draw();
   }
 }
@@ -94,6 +137,7 @@ class Ground {
   }
 
   draw() {
+    c.fillStyle = "rgba(0,0,0,0";
     c.fillRect(this.position.x, this.position.y + 80, this.width, this.height);
     c.drawImage(this.image, this.position.x, this.position.y);
   }
@@ -105,16 +149,17 @@ class Ground {
 }
 
 class Obstacle {
-  constructor({ imagesArray }) {
+  constructor({ imagesArray, obsName }) {
     this.position = {
       x: canvas.width,
-      y: groundY - 100,
+      y: groundY - 70,
     };
     this.imagesArray = imagesArray;
     this.frame = 0;
     this.image = imagesArray[this.frame];
     this.width = this.image.width;
     this.height = this.image.height;
+    this.name = obsName;
   }
   nextFrame() {
     this.frame === 0 ? (this.frame = 1) : (this.frame = 0);
@@ -158,19 +203,23 @@ backgroundArr.push(new Background({ x: 0 }));
 const player = new Player();
 
 window.addEventListener("keydown", (event) => {
-  if (!isPlaying) return;
   if (event.code === "Space") {
+    if (!isPlaying) {
+      themeSong.play();
+      startMenu.classList.add("hidden");
+      restart.classList.add("hidden");
+      isPlaying = true;
+      speed = 6;
+      player.isDead = false;
+      totalDistance = 0;
+      return;
+    }
     if (!player.isJumping) {
       player.isJumping = true;
       player.velocity.y -= 15;
+      jumpAudio.play();
     }
   }
-});
-
-startBtn.addEventListener("mousedown", () => {
-  startMenu.classList.add("hidden");
-  isPlaying = true;
-  speed = 5;
 });
 
 function requestimage(imageSource) {
@@ -230,7 +279,14 @@ function spawnObs() {
   const chance = Math.random();
   if ((chance < 0.03 && distance > 200) || distance >= 1000) {
     distance = 0;
-    obstacleArr.push(new Obstacle({ imagesArray: sawImages }));
+    const random = Math.trunc(Math.random() * obstaclesImages.length);
+
+    obstacleArr.push(
+      new Obstacle({
+        imagesArray: obstaclesImages[random],
+        obsName: `${random === 0 ? "Saw" : "Fire"}`,
+      })
+    );
   }
 }
 
@@ -267,6 +323,11 @@ function animateSaw() {
 
 setInterval(animatePlayer, 50);
 setInterval(animateSaw, 150);
+setInterval(function () {
+  if (!isPlaying) return;
+  totalDistance++;
+  currentScore.textContent = `${totalDistance} meters`;
+}, 1000);
 
 function animate() {
   requestAnimationFrame(animate);

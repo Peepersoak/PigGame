@@ -5,22 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pig Game</title>
-
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="startMenu" class="startingWrapper">
-      <div>
-        <h1 class="text">Welcome to Pig Game</h1>
-        <h4 class="text">
-          Get the highest score without getting butchered or getting cooked
-        </h4>
-        <div class="center">
-          <button id="startBtn" class="text start-btn">Start Game</button>
+    <div class="flex">
+      <div class="scores">
+        <h2 id="currentScore" class="text">0 meters</h2>
+        <h2 id="highScore" class="text">High Score: 0 meters</h2>
+      </div>
+      <div id="startMenu" class="startingWrapper">
+        <div class="startingChildWrapper">
+          <h1 class="text">Pig Game</h1>
+          <h2 class="text">Press space to Start</h2>
+          <p class="text">
+            Avoid this <img src="./img/saw/1.png" class="icons" />
+          </p>
         </div>
       </div>
+      <div id="restartMenu" class="restartWarpper hidden">
+        <div class="startingChildWrapper">
+          <h1 class="text">You Died!!</h1>
+          <h2 class="text">Press space to Start Again</h2>
+          <h4 class="text" id="score"></h4>
+        </div>
+      </div>
+      <canvas></canvas>
     </div>
-    <canvas></canvas>
     <script src="script.js" type="module"></script>
   </body>
 </html>

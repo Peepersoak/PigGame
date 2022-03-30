@@ -1,7 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
+
 body {
   margin: 0;
+
+  background: linear-gradient(180deg, #6bb4f3, #d3efff);
+}
+
+h1 {
+  font-family: "Gochi Hand", cursive;
+}
+
+h1 {
+  font-size: 150px;
+  margin: 0;
+}
+
+h2 {
+  font-size: 40px;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+p,
+h4 {
+  font-size: 24px;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.flex {
   display: flex;
   justify-content: center;
+  min-height: 100vh;
+  align-items: center;
+}
+
+#currentScore,
+#highScore {
+  position: absolute;
+  color: #0d7dce;
+}
+
+#currentScore {
+  top: 20px;
+  left: 100px;
+}
+
+#highScore {
+  top: 20px;
+  right: 100px;
 }
 
 .text {
@@ -9,19 +55,36 @@ body {
   text-align: center;
 }
 
-.startingWrapper {
+.startingWrapper,
+.restartWarpper {
   position: absolute;
-  top: 200px;
+  width: 1366px;
+  height: 768px;
+  background: #064b7cb3;
+  backdrop-filter: blur(5px);
+}
+
+.scores {
+  position: absolute;
+  width: 1366px;
+  height: 768px;
+}
+
+.startingChildWrapper {
+  padding-top: 100px;
 }
 
 .start-btn {
-  background: red;
-  padding: 10px 100px;
+  background: #139dff;
+  padding: 15px 100px;
   border: none;
+  font-size: 30px;
+  margin-top: 30px;
+  border-radius: 100px;
 }
 
 .start-btn:hover {
-  background: rgb(117, 0, 0);
+  background: #0d7dce;
 }
 
 .hidden {
@@ -30,4 +93,8 @@ body {
 
 .center {
   text-align: center;
+}
+
+.icons {
+  width: 50px;
 }
